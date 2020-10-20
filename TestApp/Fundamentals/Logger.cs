@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace TestApp
 {
@@ -19,6 +20,8 @@ namespace TestApp
 
             // Write the log to a storage
             // ...
+
+            Thread.Sleep(TimeSpan.FromSeconds(0.5));
 
             MessageLogged?.Invoke(this, DateTime.UtcNow);
         }
