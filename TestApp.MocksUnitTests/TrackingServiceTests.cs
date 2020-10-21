@@ -8,8 +8,11 @@ using Xunit;
 // dotnet add package Moq
 // dotnet add package FakeItEasy
 
+// zapis imperatywny
+
 namespace TestApp.MocksUnitTests
 {
+
     public class TrackingServiceTests
     {
         private Mock<IFileReader> mockFileReader;

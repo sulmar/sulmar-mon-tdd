@@ -23,7 +23,7 @@ namespace TestApp.Mocking
 
         public List<OrderDetail> Details { get; set; }
 
-        public decimal Total => Details.Sum(d => d.Total);
+        public virtual decimal Total => Details.Sum(d => d.Total);
     }
 
     public enum OrderStatus
