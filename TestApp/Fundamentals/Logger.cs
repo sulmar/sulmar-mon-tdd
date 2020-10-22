@@ -5,11 +5,21 @@ using System.Threading;
 
 namespace TestApp
 {
+    public class LogEventArgs : EventArgs
+    {
+        public LogEventArgs(DateTime logDate)
+        {
+            LogDate = logDate;
+        }
+
+        public DateTime LogDate { get; set; }
+    }
+
     public class Logger
     {
         public string LastMessage { get; set; }
 
-        public event EventHandler<DateTime> MessageLogged;
+        public event EventHandler<LogEventArgs> MessageLogged;
 
         public void Log(string message)
         {
@@ -23,7 +33,7 @@ namespace TestApp
 
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
 
-            MessageLogged?.Invoke(this, DateTime.UtcNow);
+           MessageLogged?.Invoke(this, new LogEventArgs(DateTime.UtcNow));
         }
     }
 }

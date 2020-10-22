@@ -16,7 +16,7 @@ namespace TestApp.MSUnitTests
 
             DateTime id = DateTime.MinValue;
 
-            logger.MessageLogged += (sender, args) => { id = args; };
+            logger.MessageLogged += (sender, args) => { id = args.LogDate; };
 
             // Act
             logger.Log("a");

@@ -124,7 +124,7 @@ namespace TestApp.Mocking
 
             SalesContext salesContext = new SalesContext();
 
-            var recipients = salesContext.Users.OfType<Employee>().Where(e => e.IsBoss).ToList();
+            IEnumerable<User> recipients = salesContext.Users.OfType<Employee>().Where(e => e.IsBoss).ToList();
 
             var sender = salesContext.Users.OfType<Bot>().Single();
 
