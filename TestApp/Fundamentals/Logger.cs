@@ -33,7 +33,7 @@ namespace TestApp
 
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
 
-           MessageLogged?.Invoke(this, new LogEventArgs(DateTime.UtcNow));
+            MessageLogged?.Invoke(this, new LogEventArgs(DateTime.UtcNow));
         }
     }
 }

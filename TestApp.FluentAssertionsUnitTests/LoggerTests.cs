@@ -22,5 +22,22 @@ namespace TestApp.FluentAssertionsUnitTests
             // Assert
             act.ExecutionTime().Should().BeLessOrEqualTo(limit);
         }
+
+        [Fact]
+        public void Log_ValidMessage_RaiseMessageLoggedEvent()
+        {
+            // Arrange
+            Logger logger = new Logger();
+
+            // Act
+            using(var monitoredLogger = logger.Monitor())
+            {
+                logger.Log("a");
+
+                // Assert
+                monitoredLogger.Should().Raise("MessageLogged");
+            }
+
+        }
     }
 }
