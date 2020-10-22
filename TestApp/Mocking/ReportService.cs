@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SendGrid;
-using SendGrid.Helpers.Mail;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -93,115 +90,58 @@ namespace TestApp.Mocking
         }
     }
 
-    #endregion
+#endregion
 
     public class ReportService
     {
-        private const string apikey = "your_secret_key";
-
         public delegate void ReportSentHandler(object sender, ReportSentEventArgs e);
         public event ReportSentHandler ReportSent;
 
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly IOrderService orderService;
+        private readonly IUserService userService;
+        private readonly ISalesReportBuilder salesReportBuilder;
+        private readonly IMessageClient client;
 
-
+        public ReportService(
+            IOrderService orderService,
+            IUserService userService,
+            ISalesReportBuilder salesReportBuilder,
+            IMessageClient client)
+        {
+            this.orderService = orderService;
+            this.userService = userService;
+            this.salesReportBuilder = salesReportBuilder;
+            this.client = client;
+        }
 
         public async Task SendSalesReportEmailAsync(DateTime date)
         {
-            OrderService orderService = new OrderService();
+            var criteria = new OrderSearchCriteria(date.AddDays(-7), date);
 
-            var orders = orderService.Get(date.AddDays(-7), date);
+            var orders = orderService.Get(criteria);
 
             if (!orders.Any())
             {
                 return;
             }
 
-            SalesReport report = Create(orders);
+            salesReportBuilder.Add(orders);
 
-            // dotnet add package SendGrid
-            SendGridClient client = new SendGridClient(apikey);
+            SalesReport report = salesReportBuilder.Create();
 
-            SalesContext salesContext = new SalesContext();
+            IEnumerable<User> recipients = userService.GetBossesRecipients();
 
-            IEnumerable<User> recipients = salesContext.Users.OfType<Employee>().Where(e => e.IsBoss).ToList();
-
-            var sender = salesContext.Users.OfType<Bot>().Single();
+            var sender = userService.GetBot();
 
             foreach (var recipient in recipients)
             {
-                if (recipient.Email == null)
-                    continue;
-
-                var message = MailHelper.CreateSingleEmail(
-                    new EmailAddress(sender.Email, $"{sender.FirstName} {sender.LastName}"), 
-                    new EmailAddress(recipient.Email, $"{recipient.FirstName} {recipient.LastName}"), 
-                    "Raport sprzedaży",
-                    report.ToString(),
-                    report.ToHtml());
-
-
-                Logger.Info($"Wysyłanie raportu do {recipient.FirstName} {recipient.LastName} <{recipient.Email}>...");
-
-                var response = await client.SendEmailAsync(message);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
-                {
-                    ReportSent?.Invoke(this, new ReportSentEventArgs(DateTime.Now));
-
-                    Logger.Info($"Raport został wysłany.");
-                }
-                else
-                {
-                    Logger.Error($"Błąd podczas wysyłania raportu.");
-
-                    throw new ApplicationException("Błąd podczas wysyłania raportu.");
-                }
+                await client.SendAsync(sender, recipient, report);
             }
         }
-
-        private static SalesReport Create(IEnumerable<Order> orders)
-        {
-            SalesReport salesReport = new SalesReport();
-
-            salesReport.TotalAmount = orders.Sum(o => o.Total);
-
-            return salesReport;
-        }
-    }
-
-    public class ReportSentEventArgs : EventArgs
-    {
-        public readonly DateTime SentDate;
-
-        public ReportSentEventArgs(DateTime sentDate)
-        {
-            this.SentDate = sentDate;
-        }
-    }
-
-    public class OrderService
-    {
-        private readonly SalesContext context;
-
-        public OrderService()
-        {
-            context = new SalesContext();
-        }
-
-        public IEnumerable<Order> Get(DateTime from, DateTime to)
-        {
-            return context.Orders.Where(o => o.OrderedDate > from && o.OrderedDate < to).ToList();
-        }
-    }
-
-    public class SalesContext : DbContext
-    {
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<User> Users { get; set; }
     }
 
 
-   
+
+
 
 }
