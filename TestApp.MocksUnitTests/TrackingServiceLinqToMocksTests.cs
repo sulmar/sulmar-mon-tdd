@@ -13,7 +13,7 @@ namespace TestApp.MocksUnitTests
     // Linq To Moq
     // zapis deklaratywny
 
-    public class TrackingServiceLinqToMoqTests
+    public class TrackingServiceLinqToMocksTests
     {
         private IFileReader fileReader;
 
@@ -21,7 +21,7 @@ namespace TestApp.MocksUnitTests
         private Lazy<ITrackingService> lazyTackingService;
         private ITrackingService trackingService => lazyTackingService.Value;
 
-        public TrackingServiceLinqToMoqTests()
+        public TrackingServiceLinqToMocksTests()
         {
             // trackingService = new TrackingService(fileReader);
 

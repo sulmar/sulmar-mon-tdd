@@ -9,7 +9,7 @@ using System.Net.Mail;
 
 namespace TestApp.MocksUnitTests
 {
-   
+
     public class SmtpClientWrapper : ISmtpClient
     {
         public SmtpClient SmtpClient { get; set; }
@@ -61,51 +61,6 @@ namespace TestApp.MocksUnitTests
 
             // Assert
             act.Should().ThrowExactly<FormatException>();
-        }
-    }
-
-    public class StandardShippingCostCalculatorTests
-    {
-        private IShippingCostCalculator calculator;
-        private Mock<Order> mockOrder;
-        private Order order;
-
-        public StandardShippingCostCalculatorTests()
-        {
-            calculator = new StandardShippingCostCalculator();
-            mockOrder = new Mock<Order>();
-            order = mockOrder.Object;
-        }
-
-        [Fact]
-        public void CalculateShippingCost_BelowLimit_ShouldBeCostShipping()
-        {
-            // Arrange
-            mockOrder
-                .SetupGet(o => o.Total)
-                .Returns(0.01m);
-
-            // Act
-            var result = calculator.CalculateShippingCost(order);
-
-            // Assert
-            result.Should().BeGreaterThan(0);
-
-        }
-
-        [Fact]
-        public void CalculateShippingCost_AboveLimit_ShouldBeFreeShipping()
-        {
-            // Arrange
-            mockOrder
-                .SetupGet(o => o.Total)
-                .Returns(1000m);
-
-            // Act
-            var result = calculator.CalculateShippingCost(order);
-
-            // Assert
-            result.Should().Be(0);
         }
     }
 
