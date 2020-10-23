@@ -1,36 +1,27 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.TestHost;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
+using Microsoft.AspNetCore.Mvc.Testing;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Api.IntegrationTests
 {
-
-    public class VehiclesControllerTests
+    // dotnet add package Microsoft.AspNetCore.Mvc.Testing
+    public class VehiclesControllerFixtureTests : IClassFixture<WebApplicationFactory<WebApi.Startup>>
     {
-        private TestServer server;
-        private HttpClient client;
+        private WebApplicationFactory<WebApi.Startup> factory;
 
-        public VehiclesControllerTests()
+        public VehiclesControllerFixtureTests(WebApplicationFactory<WebApi.Startup> factory)
         {
-            server = new TestServer(WebHost.CreateDefaultBuilder()
-                .UseStartup<WebApi.Startup>()
-                .UseEnvironment("Development"));
-
-            client = server.CreateClient();
+            this.factory = factory;
         }
 
         [Fact]
         public async Task GetById_ExistsId_ShouldReturnVehicle()
         {
             // Arrange
+
+            var client = factory.CreateClient();
 
             // Act
             var result = await client.GetAsync("api/vehicles/1");
@@ -44,6 +35,7 @@ namespace Api.IntegrationTests
         public async Task GetById_NotExistsId_ShouldNotReturnVehicle()
         {
             // Arrange
+            var client = factory.CreateClient();
 
             // Act
             var result = await client.GetAsync("api/vehicles/0");
@@ -52,7 +44,6 @@ namespace Api.IntegrationTests
             result.IsSuccessStatusCode.Should().BeFalse();
             result.StatusCode.Should().Be(StatusCodes.Status404NotFound);
         }
-
 
 
     }
