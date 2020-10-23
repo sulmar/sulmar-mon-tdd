@@ -31,7 +31,7 @@ namespace TestApp
             // Write the log to a storage
             // ...
 
-            Thread.Sleep(TimeSpan.FromSeconds(0.5));
+            Thread.Sleep(TimeSpan.FromSeconds(0.06));
 
             MessageLogged?.Invoke(this, new LogEventArgs(DateTime.UtcNow));
         }
