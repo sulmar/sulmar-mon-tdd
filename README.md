@@ -1,13 +1,13 @@
 
-| NUnit 3.x            | MSTest v2.x.         | xUnit.net 2.x             | Comments                                           |
-| -------------------- | -------------------- | ------------------------- | -------------------------------------------------- |
-| \[Test\]             | \[TestMethod\]       | \[Fact\]                  | Marks a test method.                               |
-| \[TestFixture\]      | \[TestClass\]        | n/a                       | Marks a test class.                                |
-| `[SetUp]`            | \[TestInitialize\]   | Constructor               | Triggered before every test case.                  |
-| \[TearDown\]         | \[TestCleanup\]      | IDisposable.Dispose       | Triggered after every test case.                   |
-| \[OneTimeSetUp\]     | \[ClassInitialize\]  | IClassFixture<T>          | One-time triggered method before test cases start. |
-| \[OneTimeTearDown\]  | \[ClassCleanup\]     | IClassFixture<T>          | One-time triggered method after test cases end.    |
-| \[Ignore("reason")\] | \[Ignore\]           | \[Fact(Skip="reason")\]   | Ignores a test case.                               |
-| \[Property\]         | \[TestProperty\]     | \[Trait\]                 | Sets arbitrary metadata on a test.                 |
-| \[Theory\]           | \[DataRow\]          | \[Theory\]                | Configures a data-driven test.                     |
-| \[Category("")\]     | \[TestCategory("")\] | \[Trait("Category", "")\] | Categorizes the test cases or classes.             |
+| MSTest v2.x.         | xUnit.net 2.x             | NUnit 3.x            | Comments                                           |
+| -------------------- | ------------------------- | -------------------- | -------------------------------------------------- |
+| \[TestMethod\]       | \[Fact\]                  | \[Test\]             | Marks a test method.                               |
+| \[TestClass\]        | n/a                       | \[TestFixture\]      | Marks a test class.                                |
+| \[TestInitialize\]   | Constructor               | `[SetUp]`            | Triggered before every test case.                  |
+| \[TestCleanup\]      | IDisposable.Dispose       | \[TearDown\]         | Triggered after every test case.                   |
+| \[ClassInitialize\]  | IClassFixture<T>          | \[OneTimeSetUp\]     | One-time triggered method before test cases start. |
+| \[ClassCleanup\]     | IClassFixture<T>          | \[OneTimeTearDown\]  | One-time triggered method after test cases end.    |
+| \[Ignore\]           | \[Fact(Skip="reason")\]   | \[Ignore("reason")\] | Ignores a test case.                               |
+| \[TestProperty\]     | \[Trait\]                 | \[Property\]         | Sets arbitrary metadata on a test.                 |
+| \[DataRow\]          | \[Theory\]                | \[Theory\]           | Configures a data-driven test.                     |
+| \[TestCategory("")\] | \[Trait("Category", "")\] | \[Category("")\]     | Categorizes the test cases or classes.             |
